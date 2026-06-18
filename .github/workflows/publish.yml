@@ -1,0 +1,19 @@
+name: publish
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mafold CLI
+        run: |
+          curl -fsSL https://github.com/mafold-com/mafold-cli/releases/latest/download/mafold-x86_64-unknown-linux-gnu -o "$HOME/.local/bin/mafold" --create-dirs
+          chmod +x "$HOME/.local/bin/mafold"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Publish all cards (global scope)
+        env:
+          MAFOLD_BOT_TOKEN: ${{ secrets.MAFOLD_CARDS_TOKEN }}
+        run: node scripts/publish-all.mjs

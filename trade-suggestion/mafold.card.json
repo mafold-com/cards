@@ -1,0 +1,6 @@
+{
+  "tag": "trade-suggestion",
+  "version": "0.1.0",
+  "entry": "src/card.tsx",
+  "displayName": "Trade Suggestion"
+}
