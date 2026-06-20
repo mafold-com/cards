@@ -23,7 +23,7 @@ function Skill({ name, args }: { name?: string; args?: string }) {
 
 function Result({ duration, tokens, cost }: { duration?: string; tokens?: string; cost?: string }) {
   const c = useColors();
-  const bits = [str(duration), str(tokens) ? `${str(tokens)} tok` : "", str(cost)].filter(Boolean).join("  ·  ");
+  const bits = [str(duration), str(tokens) ? `${str(tokens)} tok` : "", str(cost)].filter(Boolean).join(" · ");
   return (
     <View style={[styles.result, { borderColor: c.border }]}>
       <Icon name="check" size={13} color={c.success} />

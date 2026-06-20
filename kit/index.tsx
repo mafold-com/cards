@@ -175,7 +175,7 @@ export function parseAsk(body: string): AskQ[] {
 
 export const styles = StyleSheet.create({
   chip: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 9, borderWidth: StyleSheet.hairlineWidth, alignSelf: "flex-start" },
-  result: { flexDirection: "row", alignItems: "center", gap: 8, paddingVertical: 4, paddingHorizontal: 10, borderRadius: 9, borderWidth: StyleSheet.hairlineWidth, alignSelf: "flex-start" },
+  result: { flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 4, paddingHorizontal: 8, borderRadius: 9, borderWidth: StyleSheet.hairlineWidth, alignSelf: "flex-start" },
   block: { padding: 12, borderRadius: 10, borderWidth: StyleSheet.hairlineWidth, gap: 5 },
   // Collapsible (bash output / thinking): reads as a compact chip when closed
   // (matches the tool chip), only growing padding to host the body when open.
