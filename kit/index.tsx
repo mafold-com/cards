@@ -6,7 +6,21 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useHost } from "@mafold/cards";
-import { Svg, Path, Circle, Rect, Line, Polyline } from "react-native-svg";
+
+// react-native-svg is a HOST-PROVIDED external. Older app builds (and the web
+// runtime) may not supply it, so require it DEFENSIVELY: a hoisted `import` makes
+// the host's "unavailable module" throw uncaught, which aborts the bundle eval —
+// the card then never registers and is stuck on "Loading card…". Catching it lets
+// the card still load and render everything except the icon; new builds that DO
+// provide svg render icons normally.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let RNSVG: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  RNSVG = require("react-native-svg");
+} catch {
+  /* host without react-native-svg → icons degrade to nothing, card still loads */
+}
 
 // Icons are rendered manually from Lucide's path data rather than via
 // `lucide-react-native`'s components. Under the New Architecture, lucide's own
@@ -16,9 +30,10 @@ import { Svg, Path, Circle, Rect, Line, Polyline } from "react-native-svg";
 // the <Svg>, children inherit stroke — paints correctly and drops the lucide
 // runtime dep. Data is Lucide v0.469 (ISC); each node is `[tag, attrs]`.
 type SvgNode = [string, Record<string, string>];
-const SVG_ELS: Record<string, React.ComponentType<Record<string, unknown>>> = {
-  path: Path, circle: Circle, rect: Rect, line: Line, polyline: Polyline,
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const SVG_ELS: Record<string, any> = RNSVG ? {
+  path: RNSVG.Path, circle: RNSVG.Circle, rect: RNSVG.Rect, line: RNSVG.Line, polyline: RNSVG.Polyline,
+} : {};
 const NODES: Record<string, SvgNode[]> = {
   terminal: [["polyline", { points: "4 17 10 11 4 5" }], ["line", { x1: "12", x2: "20", y1: "19", y2: "19" }]],
   file: [["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" }], ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4" }], ["path", { d: "M10 9H8" }], ["path", { d: "M16 13H8" }], ["path", { d: "M16 17H8" }]],
@@ -44,6 +59,10 @@ const NODES: Record<string, SvgNode[]> = {
 /** A themed vector icon. `name` is a key into `NODES` (see `toolIcon`). */
 export function Icon({ name, size = 14, color, strokeWidth = 2 }:
   { name: string; size?: number; color?: string; strokeWidth?: number }) {
+  // Host without react-native-svg (older app build / web w/o svg): render no
+  // icon, so the rest of the card still shows instead of failing to load.
+  if (!RNSVG) return null;
+  const Svg = RNSVG.Svg;
   const node = NODES[name] ?? NODES.wrench;
   const col = color ?? "#888";
   // Decorative only — `pointerEvents="none"` keeps the SVG out of the touch

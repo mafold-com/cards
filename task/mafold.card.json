@@ -1,6 +1,6 @@
 {
   "tag": "task",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "entry": "src/card.tsx",
   "displayName": "Task"
 }
