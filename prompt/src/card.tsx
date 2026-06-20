@@ -13,7 +13,7 @@ function Prompt(props: Record<string, unknown>) {
   const content = props.content as string | undefined;
 
   return (
-    <CardShell icon="✨" title={name}>
+    <CardShell icon="sparkles" title={name}>
       {description ? <Text style={{ color: t.muted, fontSize: 13 }}>{description}</Text> : null}
       {content ? (
         <Text style={{ color: t.subtle, fontSize: 12, fontFamily: "Menlo" }} numberOfLines={3}>

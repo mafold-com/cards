@@ -14,7 +14,7 @@ function Balance(props: Record<string, unknown>) {
     .slice(0, 3);
 
   return (
-    <CardShell icon="👛" title="Wallet Balance">
+    <CardShell icon="wallet" title="Wallet Balance">
       <Text style={{ color: theme.tokens.muted, fontSize: 13 }} numberOfLines={2}>
         {balances.map((b) => `${b.currency}: ${fmtNum(b.total)}`).join(", ") || "—"}
       </Text>

@@ -14,7 +14,7 @@ function SymbolInfo(props: Record<string, unknown>) {
   const sub = market && exchange ? `${market} · ${exchange}` : name;
 
   return (
-    <CardShell icon="🏷" title={ticker}>
+    <CardShell icon="tag" title={ticker}>
       {sub ? <Text style={{ color: theme.tokens.muted, fontSize: 13 }}>{sub}</Text> : null}
     </CardShell>
   );

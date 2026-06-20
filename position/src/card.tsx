@@ -23,7 +23,7 @@ function Positions(props: Record<string, unknown>) {
   const shorts = positions.length - longs;
 
   return (
-    <CardShell icon="📈" title="Positions">
+    <CardShell icon="trend" title="Positions">
       {positions.length === 0 ? (
         <Text style={{ color: t.subtle, fontSize: 13 }}>No open positions</Text>
       ) : (

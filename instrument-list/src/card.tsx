@@ -12,7 +12,7 @@ function InstrumentList(props: Record<string, unknown>) {
   const items = arr.filter((d) => typeof d.displayName === "string");
 
   return (
-    <CardShell icon="📑" title="Instruments">
+    <CardShell icon="list" title="Instruments">
       {items.length === 0 ? (
         <Text style={{ color: t.subtle, fontSize: 13 }}>None</Text>
       ) : (

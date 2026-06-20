@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { defineCard, useHost } from "@mafold/cards";
+import { Icon } from "../../kit";
 
 /**
  * `/compact` result card — a progress bar showing how much conversation context
@@ -23,7 +24,10 @@ function Compact({ before = "", after = "" }: { before?: string; after?: string 
   return (
     <View style={[styles.card, { backgroundColor: t.float, borderColor: t.border }]}>
       <View style={styles.head}>
-        <Text style={[styles.title, { color: t.text }]}>🗜️  Context compacted</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+          <Icon name="archive" size={15} color={t.text} />
+          <Text style={[styles.title, { color: t.text }]}>Context compacted</Text>
+        </View>
         {hasData ? <Text style={[styles.badge, { color: t.success }]}>−{reduce}%</Text> : null}
       </View>
 

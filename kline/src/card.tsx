@@ -20,7 +20,7 @@ function KLine(props: Record<string, unknown>) {
   const up = changePct >= 0;
 
   return (
-    <CardShell icon="📈" title={`${symbol}${period ? " · " + period : ""}`}>
+    <CardShell icon="trend" title={`${symbol}${period ? " · " + period : ""}`}>
       {last != null ? (
         <View style={{ gap: 4 }}>
           <View style={styles.row}>

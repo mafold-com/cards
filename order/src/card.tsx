@@ -12,7 +12,7 @@ function Orders(props: Record<string, unknown>) {
   const orders = arr.filter((d) => typeof d.symbol === "string");
 
   return (
-    <CardShell icon="📋" title="Orders">
+    <CardShell icon="clipboard" title="Orders">
       {orders.length === 0 ? (
         <Text style={{ color: t.subtle, fontSize: 13 }}>No orders</Text>
       ) : (

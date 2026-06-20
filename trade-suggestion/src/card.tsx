@@ -18,7 +18,7 @@ function TradeSuggestion(props: Record<string, unknown>) {
   const confidence = props.confidence != null ? Number(props.confidence) : undefined;
 
   return (
-    <CardShell icon="🎯" title={`${instrument} ${direction} ${leverage}x`}>
+    <CardShell icon="target" title={`${instrument} ${direction} ${leverage}x`}>
       <View style={{ gap: 3 }}>
         <KVRow label="Market" value={market} />
         <KVRow label="Entry" value={fmtNum(entry)} />

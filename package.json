@@ -11,5 +11,9 @@
     "react": "^19.0.0",
     "react-native": "^0.86.0",
     "typescript": "^5.6.0"
+  },
+  "dependencies": {
+    "lucide-react-native": "^0.469.0",
+    "react-native-svg": "^15.15.5"
   }
 }
