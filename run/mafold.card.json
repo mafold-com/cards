@@ -1,6 +1,6 @@
 {
   "tag": "run",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "entry": "src/card.tsx",
   "displayName": "Agent run"
 }
