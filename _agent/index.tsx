@@ -23,18 +23,35 @@ function Skill({ name, args }: { name?: string; args?: string }) {
 
 function Result({ duration, tokens, cost }: { duration?: string; tokens?: string; cost?: string }) {
   const c = useColors();
+  const host = useHost();
   const bits = [str(duration), str(tokens) ? `${str(tokens)} tok` : "", str(cost)].filter(Boolean).join(" · ");
   return (
-    <View style={[styles.result, { borderColor: c.border }]}>
+    // Keyed on the content (see kit's Chip): attrs fill in over the stream —
+    // duration first, tokens/cost later — and the re-measure after the native
+    // latch release must always re-report, or "✓ 114.5s…" stays truncated.
+    <View
+      key={bits}
+      collapsable={false}
+      onLayout={(e) => host.reportWidth?.(e.nativeEvent.layout.width)}
+      style={[styles.result, { borderColor: c.border, maxWidth: host.maxWidth }]}
+    >
       <Icon name="check" size={13} color={c.success} />
-      <Text style={{ fontFamily: MONO, color: c.muted, fontSize: 12 }}>{bits || "done"}</Text>
+      <Text style={{ fontFamily: MONO, color: c.muted, fontSize: 12, flexShrink: 1 }} numberOfLines={1}>{bits || "done"}</Text>
     </View>
   );
 }
 
+/** "+N more" footer shown when an untrusted list was capped at MAX_ROWS. */
+function MoreRows({ extra }: { extra: number }) {
+  const c = useColors();
+  if (extra <= 0) return null;
+  return <Text style={{ fontSize: 12, color: c.muted, fontStyle: "italic" }}>+{extra} more</Text>;
+}
+
 function Todo({ body }: { body?: string }) {
   const c = useColors();
-  const items = (body || "").split("\n").map(parseTodoLine).filter(Boolean) as TodoItem[];
+  const all = (body || "").split("\n").map(parseTodoLine).filter(Boolean) as TodoItem[];
+  const items = all.slice(0, MAX_ROWS);
   if (items.length === 0) return null;
   return (
     <View style={[styles.block, { borderColor: c.border, backgroundColor: c.card }]}>

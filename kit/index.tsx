@@ -117,15 +117,30 @@ export function Chip({
   icon, label, detail, accentLabel, mono,
 }: { icon: string; label: string; detail?: string; accentLabel?: boolean; mono?: boolean }) {
   const c = useColors();
+  const host = useHost();
   // Cap at the island's real available width (a number), NOT "100%". A percentage
   // resolves against the hugging (auto-width) wrapper and collapses, so the detail
   // (flexShrink) truncates far too early. With the concrete width the chip grows
   // to fill the bubble and only truncates at the actual edge.
-  const { maxWidth } = useHost();
+  const { maxWidth } = host;
   return (
-    <View style={[styles.chip, { borderColor: c.border, backgroundColor: c.card, maxWidth }]}>
+    // Keyed on the content: a content change REMOUNTS the root so onLayout is
+    // guaranteed to re-fire (RN only fires it when the layout CHANGES — a grown
+    // label re-measured inside the released container must re-report even when
+    // the final width happens to match). Pairs with the native width-latch
+    // release on content change (iOS CardHostView.updateProps / RNIsland).
+    <View
+      key={`${icon}|${label}|${detail ?? ""}`}
+      collapsable={false}
+      onLayout={(e) => host.reportWidth?.(e.nativeEvent.layout.width)}
+      style={[styles.chip, { borderColor: c.border, backgroundColor: c.card, maxWidth }]}
+    >
       <Icon name={icon} size={14} color={accentLabel ? c.accent : c.text} />
-      <Text style={{ fontWeight: "600", color: accentLabel ? c.accent : c.text, fontSize: 13 }} numberOfLines={1}>
+      {/* flexShrink: 0 — the tool name must NEVER shrink. RN defaults flexShrink to
+          0 so iOS shows it in full; react-native-web defaults to the CSS value (1),
+          so on web the label was the thing that shrank + truncated ("Bash" → "B…")
+          instead of the detail. Pin it to 0 so BOTH platforms truncate the detail. */}
+      <Text style={{ fontWeight: "600", color: accentLabel ? c.accent : c.text, fontSize: 13, flexShrink: 0 }} numberOfLines={1}>
         {label}
       </Text>
       {detail ? (
