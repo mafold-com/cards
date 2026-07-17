@@ -1,0 +1,17 @@
+{
+  "name": "@mafold/cards",
+  "version": "0.1.0",
+  "description": "Mafold card SDK — defineCard/useHost contract for hot-loadable React Native cards. Types + a dev stub; every Mafold client injects the real runtime at load.",
+  "license": "MIT",
+  "homepage": "https://mafold.com/docs/cards",
+  "repository": "https://github.com/mafold-com/cards",
+  "publishConfig": { "access": "public" },
+  "keywords": ["mafold", "cards", "react-native", "markdoc", "sdk"],
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "files": ["index.js", "index.d.ts", "README.md"],
+  "peerDependencies": {
+    "react": ">=18"
+  }
+}
