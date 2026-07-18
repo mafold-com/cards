@@ -46,13 +46,35 @@ function previewOf(e: Entry): string {
   return "[附件]";
 }
 
+// Brand-blue chip tile — matches the native attachment chip family.
 const BLUE = "#5A78E6";
+
+/**
+ * Entries arrive either as real props (the attachment→card bridge) or as the
+ * tag BODY in canonical Markdoc form — `{% chatrecord title="…" %}<entries
+ * JSON>{% /chatrecord %}` — which is what Copy puts on the clipboard and what
+ * a BOT can emit in its reply body to render this same card. One text form,
+ * two transports.
+ */
+function entriesOf(props: Record<string, unknown>): Entry[] {
+  if (Array.isArray(props.entries)) return props.entries as Entry[];
+  const body = typeof props.body === "string" ? props.body.trim() : "";
+  if (body.startsWith("[")) {
+    try {
+      const parsed = JSON.parse(body);
+      if (Array.isArray(parsed)) return parsed as Entry[];
+    } catch {
+      /* malformed body → empty record, never a crash */
+    }
+  }
+  return [];
+}
 
 function ChatRecordChip(props: Record<string, unknown>) {
   const host = useHost();
   const t = host.theme.tokens;
   const title = (props.title as string) || "聊天记录";
-  const entries = chronological((Array.isArray(props.entries) ? props.entries : []) as Entry[]);
+  const entries = chronological(entriesOf(props));
   const open = () => {
     const h = host as unknown as {
       openCard?: (tag: string, props?: Record<string, unknown>, opts?: { title?: string }) => void;
@@ -92,7 +114,7 @@ const styles = StyleSheet.create({
   g1: { position: "absolute", left: 3, top: 4, width: 7, height: 5, borderRadius: 2, backgroundColor: "rgba(255,255,255,0.95)" },
   g2: { position: "absolute", right: 3, bottom: 3, width: 7, height: 5, borderRadius: 2, backgroundColor: "rgba(255,255,255,0.6)" },
   title: { fontSize: 13, fontWeight: "600", flexShrink: 1 },
-  lines: { marginTop: 4 },
+  lines: { marginTop: 4, minWidth: 0 },
   line: { fontSize: 12, lineHeight: 17 },
   foot: { marginTop: 6, paddingTop: 6, borderTopWidth: StyleSheet.hairlineWidth },
   footText: { fontSize: 11 },

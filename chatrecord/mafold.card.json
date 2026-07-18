@@ -1,6 +1,6 @@
 {
   "tag": "chatrecord",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "entry": "src/card.tsx",
   "displayName": "Chat record"
 }
