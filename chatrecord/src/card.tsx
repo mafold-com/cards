@@ -15,9 +15,23 @@ import { defineCard, useHost } from "@mafold/cards";
 type Entry = {
   sender_name?: string;
   sender_username?: string;
+  ts?: string;
   content?: string;
   attachments?: { kind?: string; filename?: string }[];
 };
+
+/** Chronological order, whatever order the sender froze them in — stable for
+ *  equal/missing timestamps (original index is the tiebreak). */
+function chronological(entries: Entry[]): Entry[] {
+  return entries
+    .map((e, i) => ({ e, i, t: Date.parse(e.ts || "") }))
+    .sort((a, b) => {
+      const ta = Number.isNaN(a.t) ? 0 : a.t;
+      const tb = Number.isNaN(b.t) ? 0 : b.t;
+      return ta - tb || a.i - b.i;
+    })
+    .map((x) => x.e);
+}
 
 /** Mirror of the host bubbles' one-line preview for a frozen entry. */
 function previewOf(e: Entry): string {
@@ -38,7 +52,7 @@ function ChatRecordChip(props: Record<string, unknown>) {
   const host = useHost();
   const t = host.theme.tokens;
   const title = (props.title as string) || "聊天记录";
-  const entries = (Array.isArray(props.entries) ? props.entries : []) as Entry[];
+  const entries = chronological((Array.isArray(props.entries) ? props.entries : []) as Entry[]);
   const open = () => {
     const h = host as unknown as {
       openCard?: (tag: string, props?: Record<string, unknown>, opts?: { title?: string }) => void;

@@ -12,11 +12,24 @@ import { defineCard, useHost, HostMessage } from "@mafold/cards";
  * renders (inside the host bubble) as another chip card → recursion for free.
  */
 
-type Entry = { sender_username?: string };
+type Entry = { sender_username?: string; ts?: string };
+
+/** Chronological order, whatever order the sender froze them in — stable for
+ *  equal/missing timestamps (original index is the tiebreak). */
+function chronological(entries: Entry[]): Entry[] {
+  return entries
+    .map((e, i) => ({ e, i, t: Date.parse(e.ts || "") }))
+    .sort((a, b) => {
+      const ta = Number.isNaN(a.t) ? 0 : a.t;
+      const tb = Number.isNaN(b.t) ? 0 : b.t;
+      return ta - tb || a.i - b.i;
+    })
+    .map((x) => x.e);
+}
 
 function Transcript(props: Record<string, unknown>) {
   const host = useHost();
-  const entries = (Array.isArray(props.entries) ? props.entries : []) as Entry[];
+  const entries = chronological((Array.isArray(props.entries) ? props.entries : []) as Entry[]);
   return (
     <View style={{ width: host.maxWidth }}>
       {entries.map((e, i) => {
