@@ -1,6 +1,6 @@
 {
   "tag": "kline",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "entry": "src/card.tsx",
   "displayName": "Kline"
 }

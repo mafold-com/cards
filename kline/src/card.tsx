@@ -14,6 +14,10 @@ function KLine(props: Record<string, unknown>) {
   const closes = data.map((d) => Number(d.close)).filter((n) => !isNaN(n));
   const highs = data.map((d) => Number(d.high)).filter((n) => !isNaN(n));
   const lows = data.map((d) => Number(d.low)).filter((n) => !isNaN(n));
+  // reduce, NOT `Math.max(...arr)` — `data` is untrusted card input, and spreading
+  // a huge array into a function call can overflow the stack (client-side DoS).
+  const hi = highs.reduce((mx, n) => (n > mx ? n : mx), -Infinity);
+  const lo = lows.reduce((mn, n) => (n < mn ? n : mn), Infinity);
   const last = closes[closes.length - 1];
   const first = closes[0];
   const changePct = first && last ? ((last - first) / first) * 100 : 0;
@@ -32,7 +36,7 @@ function KLine(props: Record<string, unknown>) {
           </View>
           {highs.length > 0 && lows.length > 0 ? (
             <Text style={{ color: t.muted, fontSize: 12, fontFamily: "Menlo" }}>
-              H {fmtNum(Math.max(...highs))}  L {fmtNum(Math.min(...lows))}  ·  {data.length} bars
+              H {fmtNum(hi)}  L {fmtNum(lo)}  ·  {data.length} bars
             </Text>
           ) : null}
         </View>
@@ -48,4 +52,34 @@ const styles = StyleSheet.create({
   last: { fontSize: 18, fontWeight: "700" },
 });
 
-export default defineCard({ tag: "kline", component: KLine });
+export default defineCard({
+  tag: "kline",
+  examples: [
+    {
+      name: "Uptrend",
+      description: "price up over the window",
+      props: {
+        symbol: "BTCUSDT",
+        period: "1h",
+        data: [
+          { open: 64000, high: 64500, low: 63800, close: 64200 },
+          { open: 64200, high: 65200, low: 64100, close: 65000 },
+          { open: 65000, high: 66000, low: 64800, close: 65800 },
+        ],
+      },
+    },
+    {
+      name: "Downtrend",
+      props: {
+        symbol: "ETHUSDT",
+        period: "15m",
+        data: [
+          { open: 3500, high: 3520, low: 3450, close: 3480 },
+          { open: 3480, high: 3490, low: 3400, close: 3420 },
+          { open: 3420, high: 3430, low: 3350, close: 3360 },
+        ],
+      },
+    },
+  ],
+  component: KLine,
+});

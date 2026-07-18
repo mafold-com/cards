@@ -38,4 +38,19 @@ function Orders(props: Record<string, unknown>) {
   );
 }
 
-export default defineCard({ tag: "order", component: Orders });
+export default defineCard({
+  tag: "order",
+  examples: [
+    {
+      name: "Open orders",
+      props: {
+        orders: [
+          { symbol: "BTCUSDT", side: "buy", type: "limit", qty: 0.5, price: 63000 },
+          { symbol: "ETHUSDT", side: "sell", type: "market", qty: 2, price: 3500 },
+        ],
+      },
+    },
+    { name: "Empty", props: { orders: [] }, description: "no open orders" },
+  ],
+  component: Orders,
+});

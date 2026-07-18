@@ -83,3 +83,29 @@ Agent family (the daemon's Claude Code output): `tool` `task` `web` `skill`
 `result` `todo` `diff` `bash` `thinking` `stats` `ask` · plus `compact`.
 Finance: `quote` `balance` `kline` `position` `news` `symbol-info`
 `trade-suggestion` `order` `prompt` `instrument-list`.
+
+## Unified runtime — apps + the shared remote-ui core
+
+The same repo also owns the **unified-runtime** SDK surface
+(`docs/unified-runtime-v0.md`). ONE runtime, two profiles, one shared core:
+
+- **`runtime-core/`** → `@mafold/runtime-core`: the shared **remote-ui** core —
+  the §2 wire protocol, the §3 component vocabulary + style guard, the §5 async
+  `invoke` facade (guest bridge + capability-gated host dispatcher), the §6
+  transport seam, the §7 Skia draw-list types, the §1.2 `AppManifest`
+  (`id = "owner/slug"`, reverse-DNS is DEAD) + `parseAppId`, and the guest-side
+  reconciler `mountRemote`. Imported by BOTH hosts (web react-native-web, iOS
+  native Fabric) and by every app/card guest bundle. See `runtime-core/README.md`.
+- **`sdk/`** → `@mafold/cards`: the **render-only** profile (`defineCard` /
+  `useHost`), a subset of the core.
+- **`sdk-app/`** → `@mafold/app`: the **interactive** profile (`defineApp` /
+  `useApp`) — context/messages/storage/ui/room/lifecycle + picker capabilities,
+  every member a pure async facade over `invoke`.
+
+**externals for the apps pipeline** (`mafold apps {init|dev|publish}`): on top of
+the card externals, add `@mafold/app`, `@mafold/runtime-core`, and
+`react-reconciler` (the reconciler is host-injected, never bundled into a guest).
+
+Verify the core: `npm run typecheck` (whole repo) + `npm test`
+(`runtime-core/smoke.test.ts` — id parsing, manifest parse, the invoke
+round-trip + capability gating over the in-memory transport pair).

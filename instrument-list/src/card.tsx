@@ -32,4 +32,19 @@ function InstrumentList(props: Record<string, unknown>) {
   );
 }
 
-export default defineCard({ tag: "instrument-list", component: InstrumentList });
+export default defineCard({
+  tag: "instrument-list",
+  examples: [
+    {
+      name: "Watchlist",
+      props: {
+        instruments: [
+          { displayName: "Apple Inc.", assetClass: "Equity" },
+          { displayName: "BTC/USDT", assetClass: "Crypto" },
+          { displayName: "EUR/USD", assetClass: "FX" },
+        ],
+      },
+    },
+  ],
+  component: InstrumentList,
+});

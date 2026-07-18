@@ -70,5 +70,9 @@ export default defineCard<{ before?: string; after?: string }>({
     before: { type: "string" },
     after: { type: "string" },
   },
+  examples: [
+    { name: "Compacted", props: { before: "143000", after: "9000" }, description: "−94% context freed" },
+    { name: "No numbers", props: {}, description: "degrades to a one-liner" },
+  ],
   component: Compact,
 });

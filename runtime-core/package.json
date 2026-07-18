@@ -1,0 +1,21 @@
+{
+  "name": "@mafold/runtime-core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mafold unified runtime — the SHARED remote-ui core (protocol + component vocabulary + invoke facade + transport seam + guest reconciler + AppManifest/owner-slug). Consumed by both the web (react-native-web) and iOS (native Fabric) hosts and by the guest app/card bundles.",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-reconciler": "*"
+  },
+  "peerDependenciesMeta": {
+    "react-reconciler": {
+      "optional": true
+    }
+  }
+}
