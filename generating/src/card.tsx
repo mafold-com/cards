@@ -112,9 +112,11 @@ interface GeneratingProps {
   beat?: number;
   /** Streamed output tokens so far (or the producer's estimate). */
   tokens?: number;
+  /** Background shells started this turn (CC's "1 shell" footer parity). */
+  shells?: number;
 }
 
-function Generating({ started, beat, tokens }: GeneratingProps) {
+function Generating({ started, beat, tokens, shells }: GeneratingProps) {
   const c = useColors();
   const { sendAction, maxWidth, theme } = useHost();
   const stopBg = theme.tokens.bubble || "rgba(127,127,127,0.16)";
@@ -147,6 +149,7 @@ function Generating({ started, beat, tokens }: GeneratingProps) {
 
   const meta: string[] = [fmtElapsed(now - base)];
   if (tokens && tokens > 0) meta.push(`↓ ${fmtTokens(tokens)} tokens`);
+  if (shells && shells > 0) meta.push(`⏳ ${shells} shell${shells > 1 ? "s" : ""}`);
 
   return (
     <View
@@ -188,6 +191,7 @@ export default defineCard({
     started: { type: "number" },
     beat: { type: "number" },
     tokens: { type: "number" },
+    shells: { type: "number" },
   },
   examples: [
     { name: "Streaming", props: {}, description: "no props (older producers) — full bloom, mount-clock timer" },
