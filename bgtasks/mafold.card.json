@@ -1,0 +1,6 @@
+{
+  "tag": "bgtasks",
+  "version": "0.1.1",
+  "entry": "src/card.tsx",
+  "displayName": "Background tasks"
+}
