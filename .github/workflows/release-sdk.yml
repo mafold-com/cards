@@ -1,0 +1,44 @@
+# SDK npm releases from the cards repo. Convention (monorepo
+# .docs/release-strategy.md): push `sdk.cards@X.Y.Z` → publish `@mafold/cards`
+# (sdk/) to npm. `sdk.app@X.Y.Z` joins here once @mafold/app is materialized
+# as a package. Same one-tag-one-release grammar as the app platforms.
+#
+# Requires one secret: NPM_TOKEN — an npm granular automation token with
+# publish rights on the @mafold org.
+name: release-sdk
+
+on:
+  push:
+    tags:
+      - "sdk.cards@*"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sdk
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Guard tag == package version
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME#sdk.cards@}"
+          PKG=$(node -p "require('./package.json').version")
+          if [ "$VERSION" != "$PKG" ]; then
+            echo "tag sdk.cards@$VERSION != sdk/package.json $PKG — bump the package first" >&2
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
