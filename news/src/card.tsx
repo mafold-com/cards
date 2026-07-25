@@ -29,4 +29,11 @@ const styles = StyleSheet.create({
   title: { fontSize: 14, fontWeight: "500" },
 });
 
-export default defineCard({ tag: "news", component: News });
+export default defineCard({
+  tag: "news",
+  examples: [
+    { name: "With source", props: { source: "Bloomberg", title: "Fed holds rates steady, signals one cut later this year" } },
+    { name: "Title only", props: { headline: "Bitcoin reclaims $65k as ETF inflows resume" } },
+  ],
+  component: News,
+});

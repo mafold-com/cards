@@ -1,6 +1,6 @@
 {
   "tag": "html",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "entry": "src/card.tsx",
   "displayName": "HTML"
 }

@@ -4,6 +4,7 @@
   "description": "Mafold cards — shared source, published to the API and hot-loaded by web + iOS",
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --import ./runtime-core/_ts-resolve.mjs runtime-core/smoke.test.ts",
     "publish-all": "node scripts/publish-all.mjs"
   },
   "devDependencies": {

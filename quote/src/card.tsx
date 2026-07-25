@@ -57,5 +57,10 @@ export default defineCard<{ symbol?: string; price?: string; change?: string }>(
     price: { type: "string" },
     change: { type: "string" },
   },
+  // Sample renders for the detail page — one per state worth showing.
+  examples: [
+    { name: "Gain", props: { symbol: "AAPL", price: "$214.30", change: "+1.8%" }, description: "price up" },
+    { name: "Loss", props: { symbol: "TSLA", price: "$245.00", change: "-2.5%" }, description: "price down" },
+  ],
   component: Quote,
 });

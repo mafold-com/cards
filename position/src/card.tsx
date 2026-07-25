@@ -57,4 +57,19 @@ const styles = StyleSheet.create({
   mono: { fontSize: 12, fontFamily: "Menlo" },
 });
 
-export default defineCard({ tag: "position", component: Positions });
+export default defineCard({
+  tag: "position",
+  examples: [
+    {
+      name: "Open positions",
+      props: {
+        positions: [
+          { symbol: "BTCUSDT", side: "long", qty: 0.8, leverage: 10 },
+          { symbol: "ETHUSDT", side: "short", qty: 5, leverage: 3 },
+        ],
+      },
+    },
+    { name: "Flat", props: { positions: [] }, description: "no open positions" },
+  ],
+  component: Positions,
+});

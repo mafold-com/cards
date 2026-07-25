@@ -87,6 +87,79 @@ export function Icon({ name, size = 14, color, strokeWidth = 2 }:
   );
 }
 
+/** A tiny inline line chart. Stretches to its container width; degrades to
+ *  nothing on a host without react-native-svg (same graceful path as `Icon`). */
+export function Sparkline({ data, color, height = 30 }: { data: number[]; color: string; height?: number }) {
+  if (!RNSVG || data.length < 2) return null;
+  const Svg = RNSVG.Svg;
+  const Polyline = RNSVG.Polyline;
+  const w = 100;
+  const max = data.reduce((m, n) => (n > m ? n : m), 1);
+  const step = w / (data.length - 1);
+  const pts = data
+    .map((v, i) => `${(i * step).toFixed(1)},${(height - (v / max) * height).toFixed(1)}`)
+    .join(" ");
+  return (
+    <View pointerEvents="none" style={{ width: "100%", height }}>
+      <Svg width="100%" height={height} viewBox={`0 0 ${w} ${height}`} preserveAspectRatio="none">
+        <Polyline points={pts} fill="none" stroke={color} strokeWidth={1.2} strokeLinejoin="round" strokeLinecap="round" />
+      </Svg>
+    </View>
+  );
+}
+
+/** GitHub-style activity heatmap — plain Views, no svg dependency. `data` =
+ *  daily counts oldest→newest (last entry = today); `offset` = blank cells
+ *  before the first day in the first week column (weekday alignment — the
+ *  emitter computes it, the card just lays out column-major 7-row weeks).
+ *  Oldest weeks that don't fit the island width are trimmed. */
+export function Heatmap({ data, offset = 0, color }: { data: number[]; offset?: number; color: string }) {
+  const c = useColors();
+  const { maxWidth } = useHost();
+  const cell = 9;
+  const gap = 3;
+  const rows = 7;
+  // Untrusted input: cap the series so a huge body can't mount thousands of cells.
+  const series = data.slice(-420);
+  const off = Math.min(Math.max(0, Math.floor(offset)), rows - 1);
+  const avail = typeof maxWidth === "number" && maxWidth > 0 ? maxWidth : 300;
+  const maxWeeks = Math.max(4, Math.floor((avail + gap) / (cell + gap)));
+  // Column-major cells: -1 = leading alignment blank (invisible).
+  let cells: number[] = [...Array<number>(off).fill(-1), ...series];
+  let weeks = Math.ceil(cells.length / rows);
+  if (weeks > maxWeeks) {
+    cells = cells.slice((weeks - maxWeeks) * rows);
+    weeks = maxWeeks;
+  }
+  const max = series.reduce((m, n) => (n > m ? n : m), 1);
+  const OPACITY = [0.45, 0.3, 0.55, 0.78, 1];
+  return (
+    <View pointerEvents="none" style={{ flexDirection: "row", gap }}>
+      {Array.from({ length: weeks }, (_, w) => (
+        <View key={w} style={{ gap }}>
+          {Array.from({ length: rows }, (_, r) => {
+            const v = cells[w * rows + r];
+            // Trailing cells past today / leading alignment blanks: keep the box
+            // (rows stay aligned) but paint nothing.
+            const blank = v === undefined || v < 0;
+            const lv = blank ? 0 : v === 0 ? 0 : Math.max(1, Math.min(4, Math.ceil((v / max) * 4)));
+            return (
+              <View
+                key={r}
+                style={{
+                  width: cell, height: cell, borderRadius: 2,
+                  backgroundColor: blank ? "transparent" : lv === 0 ? c.border : color,
+                  opacity: blank ? 0 : OPACITY[lv],
+                }}
+              />
+            );
+          })}
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export const str = (v: unknown): string => (v == null ? "" : String(v));
 export const num = (v: unknown): number => {
   const n = typeof v === "number" ? v : Number(v);

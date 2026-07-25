@@ -22,4 +22,19 @@ function Balance(props: Record<string, unknown>) {
   );
 }
 
-export default defineCard({ tag: "balance", component: Balance });
+export default defineCard({
+  tag: "balance",
+  // props are keyed by currency: { USDT: { free, locked, total }, … }.
+  examples: [
+    {
+      name: "Multi-currency",
+      props: {
+        USDT: { free: 8200, locked: 300, total: 8500 },
+        ETH: { free: 3.1, locked: 0.4, total: 3.5 },
+        BTC: { free: 0.42, locked: 0, total: 0.42 },
+      },
+    },
+    { name: "Single asset", props: { USDT: { free: 1000, locked: 0, total: 1000 } } },
+  ],
+  component: Balance,
+});

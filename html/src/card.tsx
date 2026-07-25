@@ -21,5 +21,15 @@ function Html({ body }: { body?: string }) {
 
 export default defineCard<{ body?: string }>({
   tag: "html",
+  // The HTML arrives as the container tag's `body` (between {% html %}…{% /html %}).
+  examples: [
+    {
+      name: "Live HTML",
+      props: {
+        body: '<div style="font:600 15px system-ui;padding:14px;text-align:center">Hello from a sandboxed card 👋</div>',
+      },
+      description: "rendered in an origin-isolated frame",
+    },
+  ],
   component: Html,
 });

@@ -38,4 +38,22 @@ function Run({ summary, children }: { summary?: string; children?: React.ReactNo
   );
 }
 
-export default defineCard({ tag: "run", component: Run as React.ComponentType });
+export default defineCard({
+  tag: "run",
+  // A collapsible group; nested tool cards arrive as the container body's children.
+  // The example ships a body of nested card tags so the preview actually expands.
+  examples: [
+    {
+      name: "Tool group",
+      description: "tap ▸ to expand the grouped tool calls",
+      props: {
+        summary: "Read 2 files · ran 1 command",
+        body:
+          '{% tool name="Read" detail="src/app/page.tsx" /%}' +
+          '{% tool name="Read" detail="src/lib/api.ts" /%}' +
+          "{% bash %}$ pnpm test\n✓ 12 passed{% /bash %}",
+      },
+    },
+  ],
+  component: Run as React.ComponentType,
+});

@@ -37,4 +37,25 @@ function TradeSuggestion(props: Record<string, unknown>) {
   );
 }
 
-export default defineCard({ tag: "trade-suggestion", component: TradeSuggestion });
+export default defineCard({
+  tag: "trade-suggestion",
+  examples: [
+    {
+      name: "Long setup",
+      props: {
+        instrument: "BTCUSDT",
+        direction: "long",
+        leverage: 5,
+        entry_price: 64000,
+        stop_loss: 62000,
+        take_profit: [
+          { price: 66000, portion_pct: 50 },
+          { price: 68000, portion_pct: 50 },
+        ],
+        market_type: "FUTURES",
+        confidence: 72,
+      },
+    },
+  ],
+  component: TradeSuggestion,
+});

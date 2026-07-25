@@ -10,7 +10,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "paths": { "@mafold/cards": ["./sdk"] }
+    "paths": {
+      "@mafold/cards": ["./sdk"],
+      "@mafold/app": ["./sdk-app"],
+      "@mafold/runtime-core": ["./runtime-core"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "**/dist"]

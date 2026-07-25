@@ -20,4 +20,11 @@ function SymbolInfo(props: Record<string, unknown>) {
   );
 }
 
-export default defineCard({ tag: "symbol-info", component: SymbolInfo });
+export default defineCard({
+  tag: "symbol-info",
+  examples: [
+    { name: "Stock", props: { ticker: "AAPL", name: "Apple Inc.", exchange: "NASDAQ", market: "US Equity" } },
+    { name: "Crypto", props: { ticker: "BTCUSDT", name: "Bitcoin / Tether" } },
+  ],
+  component: SymbolInfo,
+});

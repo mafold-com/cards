@@ -24,4 +24,17 @@ function Prompt(props: Record<string, unknown>) {
   );
 }
 
-export default defineCard({ tag: "prompt", component: Prompt });
+export default defineCard({
+  tag: "prompt",
+  examples: [
+    {
+      name: "Saved prompt",
+      props: {
+        name: "Code reviewer",
+        description: "Reviews a diff for bugs",
+        content: "You are a senior engineer. Review the following diff and list concrete, actionable issues with file:line references.",
+      },
+    },
+  ],
+  component: Prompt,
+});
